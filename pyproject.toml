@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "obj2gltf"
+version = "0.1.0"
+description = "Python package for Obj to Gltf conversion"
+authors = ["yubrajbhandari923 <yubraj.bhandari.923@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+pygltflib = "^1.16.1"
+numpy = "^1.26.1"
+trimesh = "^4.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
