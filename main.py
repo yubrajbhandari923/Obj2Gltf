@@ -7,12 +7,17 @@ class Obj2Gltf:
         self.obj_path = obj_path
         self.gltf_path = gltf_path
         self.gltf = pygltflib.GLTF2()
+        self.scene = pygltflib.Scene()
+        self.gltf.scenes.append(self.scene)
         self.gltf.scene = 0
-        self.gltf.scenes.append(pygltflib.Scene())
 
         self.obj = trimesh.load(self.obj_path)
-        self.vertices = self.obj.vertices
-        self.faces = self.obj.faces
+        self.vertices = np.array(self.obj.vertices, dtype=np.float32)
+        self.faces = np.array(self.obj.faces, dtype=np.uint32)
+
+    def 
+    
+    
         
 
 Obj2Gltf('test.obj', 'test.gltf')
