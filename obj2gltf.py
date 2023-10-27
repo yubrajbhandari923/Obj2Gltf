@@ -210,27 +210,27 @@ class Obj2Gltf:
         # pygltflib.validator.validate(self.gltf)
         # pygltflib.validator.summary(self.gltf)
 
-# Create argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("obj_path", help="Path to the obj file or folder")
-parser.add_argument("--output", help="Path to the gltf file or folder")
-parser.add_argument(
-    "--exclude_list",
-    nargs="+",
-    help="List of files to be excluded",
-    type=str,
-    default=[],
-)
-parser.add_argument(
-    "--colors",
-    nargs="+",
-    type=str,
-    help="List of colors to be used",
-)
-args = parser.parse_args()
+
 
 if __name__ == "__main__":
     # print(args.colors)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("obj_path", help="Path to the obj file or folder")
+    parser.add_argument("--output", help="Path to the gltf file or folder")
+    parser.add_argument(
+        "--exclude_list",
+        nargs="+",
+        help="List of files to be excluded",
+        type=str,
+        default=[],
+    )
+    parser.add_argument(
+        "--colors",
+        nargs="+",
+        type=str,
+        help="List of colors to be used",
+    )
+    args = parser.parse_args()
     Obj2Gltf(
         args.obj_path,
         gltf_path=args.output if args.output else None,
