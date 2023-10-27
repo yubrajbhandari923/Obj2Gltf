@@ -44,8 +44,6 @@ class Obj2Gltf:
         else:
             self.obj_folder2gltf()
 
-        self.add_buffer()
-
     def obj_file(self):
         self.load_obj()
         self.add_buffer_view()
@@ -74,7 +72,7 @@ class Obj2Gltf:
 
     def add_buffer(self):
         self.gltf.set_binary_blob(
-            self.vertices.tobytes() + self.faces.flatten().tobytes()
+            self.gltf.binary_blob() + self.vertices.tobytes() + self.faces.flatten().tobytes()
         )
         self.byteLength += self.vertices.nbytes + self.faces.nbytes
 
@@ -199,7 +197,7 @@ class Obj2Gltf:
 
     def __del__(self):
         buffer = pygltflib.Buffer(
-            byteLength=self.vertices.nbytes + self.faces.nbytes,
+            byteLength=self.byteLength,
         )
         self.gltf.buffers.append(buffer)
         if not self.gltf_path is None:
