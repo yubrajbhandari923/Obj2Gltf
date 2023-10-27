@@ -2,7 +2,7 @@ import pygltflib
 import numpy as np
 import trimesh
 import os
-
+import argparse
 
 class Obj2Gltf:
     def __init__(
@@ -136,7 +136,7 @@ class Obj2Gltf:
             # Return the index of the material
             return self.materials[material.name]
 
-        if self.colors is list:
+        if type(self.colors) is list or type(self.colors) is tuple:
             # If colors is a list, use the value as the color
             if not self.gltf.materials:
                 # If no material is available, create a new one and add it to the mesh
@@ -148,7 +148,7 @@ class Obj2Gltf:
                 self.gltf.materials.append(material)
             return 0
         
-        elif self.colors is dict:
+        elif type(self.colors) is dict:
             # If colors is a dict, use the value as the color
             if mesh.name not in self.materials:
                 material = pygltflib.Material(
@@ -205,22 +205,37 @@ class Obj2Gltf:
         if not self.gltf_path is None:
             self.gltf.save(self.gltf_path)
         else:
-            if self.is_path_file:
+            if self.path_is_file:
                 self.gltf.save(self.obj_path.replace(".obj", ".gltf"))
             else:
                 self.gltf.save(os.path.join(self.folder_name, "_model.gltf"))
         # pygltflib.validator.validate(self.gltf)
         # pygltflib.validator.summary(self.gltf)
 
-
-Obj2Gltf(
-    "Patient_obj/liver.obj",
-    "test.gltf",
-    exclude_list=[
-        "Body_Filled.obj",
-        "Skin.obj",
-        "Visceral_fat.obj",
-        "Subcutaneous_fat.obj",
-        "Muscles.obj",
-    ],
+# Create argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("obj_path", help="Path to the obj file or folder")
+parser.add_argument("--output", help="Path to the gltf file or folder")
+parser.add_argument(
+    "--exclude_list",
+    nargs="+",
+    help="List of files to be excluded",
+    type=str,
+    default=[],
 )
+parser.add_argument(
+    "--colors",
+    nargs="+",
+    type=str,
+    help="List of colors to be used",
+)
+args = parser.parse_args()
+
+if __name__ == "__main__":
+    # print(args.colors)
+    Obj2Gltf(
+        args.obj_path,
+        gltf_path=args.output if args.output else None,
+        exclude_list=args.exclude_list[0].replace("[","").replace("]","").split(",") if args.exclude_list else [],
+        colors=[int(i) for i in args.colors[0].replace("[","").replace("]","").split(",")] if args.colors else None,
+    )
