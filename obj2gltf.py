@@ -180,7 +180,7 @@ class Obj2Gltf:
 
     def add_mesh(self):
         mesh = pygltflib.Mesh(
-            name=self.obj_path.split("/")[-1].replace(".obj", "")
+            name=self.obj_path.split(os.sep)[-1].replace(".obj", "")
             if not self.path_is_file
             else self.obj_path.replace(".obj", "")
         )
