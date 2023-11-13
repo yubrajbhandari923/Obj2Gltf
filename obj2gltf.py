@@ -21,8 +21,8 @@ class Obj2Gltf:
 
         """
 
-        self.obj_path = obj_path
-        self.gltf_path = gltf_path
+        self.obj_path = os.path(obj_path)
+        self.gltf_path = os.path(gltf_path)
         self.gltf = pygltflib.GLTF2()
         self.scene = pygltflib.Scene()
         self.gltf.scenes.append(self.scene)
@@ -39,16 +39,18 @@ class Obj2Gltf:
         self.gltf.asset = pygltflib.Asset(version="2.0")
 
         # Check if obj_path is a file or folder
-        if obj_path.endswith(".obj"):
+        if os.path.isfile(self.obj_path):
             self.obj_file()
-        else:
+        elif os.path.isdir(self.obj_path):
             self.obj_folder2gltf()
+        else:
+            raise Exception("Invalid path")
 
     def obj_file(self):
         self.load_obj()
         self.add_buffer_view()
         self.add_accessor()
-        # self.add_material()
+        # self.add_material() # Material is added in add_mesh()
         self.add_mesh()
         self.add_node()
         self.add_buffer()
@@ -179,6 +181,9 @@ class Obj2Gltf:
         self.scene.nodes.append(len(self.gltf.nodes) - 1)
 
     def add_mesh(self):
+        """ Mesh is added to the gltf
+            - Mesh Name is the name of the obj file
+        """
         mesh = pygltflib.Mesh(
             name=self.obj_path.split(os.sep)[-1].replace(".obj", "")
             if not self.path_is_file
@@ -201,11 +206,14 @@ class Obj2Gltf:
         )
         self.gltf.buffers.append(buffer)
         if not self.gltf_path is None:
+            print(f"Saving {self.gltf_path}")
             self.gltf.save(self.gltf_path)
         else:
             if self.path_is_file:
+                print(f"Saving {self.obj_path.replace('.obj', '.gltf')}")
                 self.gltf.save(self.obj_path.replace(".obj", ".gltf"))
             else:
+                print(f"Saving {self.folder_name.replace(os.sep,'')}_model.gltf")
                 self.gltf.save(os.path.join(self.folder_name.replace(os.sep,""), "_model.gltf"))
         # pygltflib.validator.validate(self.gltf)
         # pygltflib.validator.summary(self.gltf)
