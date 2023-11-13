@@ -206,7 +206,7 @@ class Obj2Gltf:
             if self.path_is_file:
                 self.gltf.save(self.obj_path.replace(".obj", ".gltf"))
             else:
-                self.gltf.save(os.path.join(self.folder_name, "_model.gltf"))
+                self.gltf.save(os.path.join(self.folder_name.replace(os.sep,""), "_model.gltf"))
         # pygltflib.validator.validate(self.gltf)
         # pygltflib.validator.summary(self.gltf)
 
