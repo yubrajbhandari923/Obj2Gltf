@@ -3,6 +3,7 @@ import numpy as np
 import trimesh
 import os
 import argparse
+from pathlib import Path
 
 class Obj2Gltf:
     def __init__(
@@ -20,9 +21,8 @@ class Obj2Gltf:
 
 
         """
-
-        self.obj_path = os.path(obj_path)
-        self.gltf_path = os.path(gltf_path)
+        self.obj_path = Path(obj_path)
+        self.gltf_path = gltf_path
         self.gltf = pygltflib.GLTF2()
         self.scene = pygltflib.Scene()
         self.gltf.scenes.append(self.scene)
@@ -39,12 +39,12 @@ class Obj2Gltf:
         self.gltf.asset = pygltflib.Asset(version="2.0")
 
         # Check if obj_path is a file or folder
-        if os.path.isfile(self.obj_path):
+        if self.obj_path.is_file():
             self.obj_file()
-        elif os.path.isdir(self.obj_path):
+        elif self.obj_path.is_dir():
             self.obj_folder2gltf()
         else:
-            raise Exception("Invalid path")
+            raise Exception("Invalid obj_path argument. It should be a file or a folder")
 
     def obj_file(self):
         self.load_obj()
@@ -205,16 +205,20 @@ class Obj2Gltf:
             byteLength=self.byteLength,
         )
         self.gltf.buffers.append(buffer)
+        save_path = ""
+        
         if not self.gltf_path is None:
-            print(f"Saving {self.gltf_path}")
-            self.gltf.save(self.gltf_path)
+            save_path = self.gltf_path if ".gltf" in self.gltf_path else self.gltf_path + ".gltf"
         else:
             if self.path_is_file:
-                print(f"Saving {self.obj_path.replace('.obj', '.gltf')}")
-                self.gltf.save(self.obj_path.replace(".obj", ".gltf"))
+                # Change the extension of the obj file Path object to gltf and save
+                save_path = str(self.obj_path).replace(".obj", "") + ".gltf"
+
             else:
-                print(f"Saving {self.folder_name.replace(os.sep,'')}_model.gltf")
-                self.gltf.save(os.path.join(self.folder_name.replace(os.sep,""), "_model.gltf"))
+                save_path= str(self.folder_name)+ "_model.gltf"
+        
+        print(f"Saving to {save_path}")
+        self.gltf.save(save_path)
         # pygltflib.validator.validate(self.gltf)
         # pygltflib.validator.summary(self.gltf)
 
