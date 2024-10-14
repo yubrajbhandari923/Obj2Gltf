@@ -15,11 +15,13 @@ class Obj2Gltf:
         colors=None,
     ):
         """
-        material: should be a function that takes filename and returens a pygltflib Material
-
-        colors: can be just normalized rgba value or dict of colors for each filename or a function that takes filename and returns a color
-
-
+        obj_path: path to the obj file or folder.
+        gltf_path: path to save the gltf file.
+                
+        exclude_list: list of files to be excluded if obj_path is a folder.
+        
+        material: should be a function that takes filename and returens a pygltflib Material.
+        colors: can be just normalized rgba value or dict of colors for each filename or a function that takes filename and returns a color.
         """
         self.obj_path = Path(obj_path)
         self.gltf_path = gltf_path
